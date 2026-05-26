@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hugo López y Hnos. S.A. — Especialistas en mantenimiento industrial, impermeabilización y pisos desde 1961. Operamos en todo el territorio argentino.">
+    <title>Hugo López y Hnos. S.A. | Mantenimiento Industrial desde 1961</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================================
+           RESET & CSS CUSTOM PROPERTIES
+        ================================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary:    #0d0d0d;
+            --bg-secondary:  #111111;
+            --bg-card:       #161616;
+            --bg-card-hover: #1c1c1c;
+            --accent:        #FF6B2B;
+            --accent-dark:   #cc4d10;
+            --accent-light:  #ff8c5a;
+            --text-primary:  #FFFFFF;
+            --text-secondary:#A0A0A0;
+            --text-muted:    #555555;
+            --border:        rgba(255,255,255,0.07);
+            --border-accent: rgba(255,107,43,0.25);
+            --font-display:  'Barlow Condensed', sans-serif;
+            --font-body:     'DM Sans', sans-serif;
+            --transition:    0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        img { max-width: 100%; display: block; }
+        a   { color: inherit; }
+
+        /* ================================================
+           GRAIN TEXTURE OVERLAY
+        ================================================ */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9990;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+
+        /* ================================================
+           CUSTOM CURSOR
+        ================================================ */
+        .cursor {
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            will-change: transform;
+            transition: width .2s, height .2s, background .2s;
+        }
+        .cursor.expanded { width: 16px; height: 16px; }
+
+        .cursor-ring {
+            width: 38px; height: 38px;
+            border: 1.5px solid rgba(255,107,43,0.45);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            will-change: transform;
+            transition: width .3s, height .3s, border-color .3s;
+        }
+        .cursor-ring.expanded {
+            width: 56px; height: 56px;
+            border-color: rgba(255,107,43,0.7);
+        }
+
+        /* ================================================
+           MOBILE NAV OVERLAY
+        ================================================ */
+        .mobile-nav {
+            display: none;
+            position: fixed; inset: 0;
+            background: var(--bg-primary);
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 8vw, 64px);
+            font-weight: 900;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: color .3s;
+        }
+        .mobile-nav a:hover { color: var(--accent); }
+        .mobile-nav-close {
+            position: absolute; top: 28px; right: 28px;
+            width: 40px; height: 40px;
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 6px;
+        }
+        .mobile-nav-close span {
+            display: block; width: 24px; height: 2px;
+            background: var(--text-primary);
+        }
+        .mobile-nav-close span:first-child { transform: rotate(45deg) translate(5px,5px); }
+        .mobile-nav-close span:last-child  { transform: rotate(-45deg) translate(5px,-5px); }
+
+        /* ================================================
+           NAVBAR
+        ================================================ */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 28px 56px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: padding var(--transition), background var(--transition), border var(--transition), backdrop-filter var(--transition);
+        }
+        .navbar.scrolled {
+            padding: 16px 56px;
+            background: rgba(13,13,13,0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .nav-logo .accent { color: var(--accent); }
+
+        .nav-links {
+            display: flex; align-items: center; gap: 36px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color var(--transition);
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 11px 22px;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.1em !important;
+            transition: background var(--transition), transform var(--transition) !important;
+        }
+        .nav-cta:hover {
+            background: var(--accent-light) !important;
+            transform: translateY(-1px);
+            color: #fff !important;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column; gap: 5px;
+            cursor: pointer;
+        }
+        .hamburger span {
+            display: block; width: 26px; height: 2px;
+            background: var(--text-primary);
+            transition: all .3s;
+        }
+
+        /* ================================================
+           HERO
+        ================================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex; align-items: center;
+            overflow: hidden;
+            padding: 130px 56px 100px;
+        }
+
+        /* Dark industrial background */
+        .hero-bg {
+            position: absolute; inset: 0;
+            background:
+                linear-gradient(135deg, rgba(13,13,13,0.96) 0%,rgba(13,13,13,0.78) 50%,rgba(13,13,13,0.92) 100%),
+                url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&auto=format&fit=crop&q=80') center/cover no-repeat;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        /* Geometric shapes layer */
+        .hero-geo {
+            position: absolute; inset: 0;
+            z-index: 1; overflow: hidden;
+            pointer-events: none;
+        }
+        .geo {
+            position: absolute;
+            border: 1px solid var(--accent);
+            opacity: 0.055;
+        }
+        .geo-sq1 {
+            width: 580px; height: 580px;
+            right: -80px; top: -80px;
+            animation: geoSpin 28s linear infinite;
+        }
+        .geo-sq2 {
+            width: 380px; height: 380px;
+            right: 80px; top: 60px;
+            opacity: 0.04;
+            animation: geoSpin 40s linear infinite reverse;
+        }
+        .geo-sq3 {
+            width: 180px; height: 180px;
+            right: 200px; top: 180px;
+            opacity: 0.07;
+            animation: geoSpin 18s linear infinite;
+        }
+        .geo-line {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(255,107,43,0.4), transparent);
+            opacity: 0.3;
+        }
+        .geo-l1 { height: 220px; right: 22%; top: 8%; animation: floatY 7s ease-in-out infinite; }
+        .geo-l2 { height: 140px; right: 38%; top: 35%; animation: floatY 9s ease-in-out infinite 1.5s; }
+        .geo-l3 { height: 100px; right: 15%; top: 55%; animation: floatY 5s ease-in-out infinite 3s; }
+
+        .geo-dot {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+        .geo-d1 { right: 22%; top: calc(8% + 220px); animation: floatY 7s ease-in-out infinite; }
+        .geo-d2 { right: 38%; top: calc(35% + 140px); animation: floatY 9s ease-in-out infinite 1.5s; }
+        .geo-d3 { right: 15%; top: calc(55% + 100px); animation: floatY 5s ease-in-out infinite 3s; }
+
+        @keyframes geoSpin { to { transform: rotate(360deg); } }
+        @keyframes floatY {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-18px); }
+        }
+
+        /* Hero content */
+        .hero-content {
+            position: relative; z-index: 2;
+            max-width: 920px;
+        }
+
+        .hero-eyebrow {
+            display: flex; align-items: center; gap: 16px;
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.35em; text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 28px;
+            opacity: 0;
+            animation: fadeUp .9s ease forwards .3s;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            display: block; width: 40px; height: 1px;
+            background: var(--accent);
+        }
+
+        .hero-h1 {
+            font-family: var(--font-display);
+            font-size: clamp(54px, 8vw, 108px);
+            font-weight: 900;
+            line-height: 0.93;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 36px;
+            opacity: 0;
+            animation: fadeUp .9s ease forwards .5s;
+        }
+        .hero-h1 .line-accent { color: var(--accent); display: block; }
+
+        .hero-sub {
+            font-size: clamp(16px, 1.5vw, 19px);
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin-bottom: 52px;
+            opacity: 0;
+            animation: fadeUp .9s ease forwards .7s;
+        }
+
+        .hero-ctas {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp .9s ease forwards .9s;
+        }
+
+        /* Scroll indicator */
+        .scroll-ind {
+            position: absolute;
+            bottom: 44px; left: 56px;
+            z-index: 2;
+            display: flex; align-items: center; gap: 16px;
+            opacity: 0;
+            animation: fadeUp .9s ease forwards 1.2s;
+        }
+        .scroll-ind-line {
+            width: 1px; height: 56px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            animation: drip 2.4s ease-in-out infinite;
+        }
+        .scroll-ind span {
+            font-size: 11px; letter-spacing: 0.25em;
+            text-transform: uppercase; color: var(--text-muted);
+            writing-mode: vertical-rl;
+        }
+        @keyframes drip {
+            0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+            50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+            51%  { transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform: translateY(32px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+
+        /* ================================================
+           BUTTONS
+        ================================================ */
+        .btn {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-family: var(--font-display);
+            font-size: 15px; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            text-decoration: none;
+            border: none; cursor: pointer;
+            padding: 16px 36px;
+            transition: all var(--transition);
+        }
+        .btn-solid {
+            background: var(--accent); color: #fff;
+        }
+        .btn-solid:hover { background: var(--accent-light); transform: translateY(-2px); }
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.28);
+        }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* ================================================
+           CREDENTIALS / STATS BAR
+        ================================================ */
+        .credentials {
+            background: var(--accent);
+            padding: 0;
+        }
+        .cred-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .cred-item {
+            padding: 52px 40px;
+            border-right: 1px solid rgba(255,255,255,0.18);
+            text-align: center;
+        }
+        .cred-item:last-child { border-right: none; }
+
+        .cred-num {
+            display: block;
+            font-family: var(--font-display);
+            font-size: clamp(52px, 5vw, 72px);
+            font-weight: 900; line-height: 1;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .cred-label {
+            font-size: 12px; font-weight: 600;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: rgba(255,255,255,0.72);
+        }
+
+        /* ================================================
+           SECTION COMMONS
+        ================================================ */
+        .section {
+            padding: 128px 56px;
+        }
+        .section--dark  { background: var(--bg-primary); }
+        .section--mid   { background: var(--bg-secondary); }
+
+        .eyebrow {
+            display: flex; align-items: center; gap: 14px;
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.32em; text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .eyebrow::before {
+            content: ''; display: block;
+            width: 30px; height: 1px; background: var(--accent);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 5.5vw, 78px);
+            font-weight: 900; line-height: 0.93;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .section-sub {
+            font-size: 16px; font-weight: 300;
+            line-height: 1.8; color: var(--text-secondary);
+            max-width: 540px;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(42px);
+            transition: opacity .75s ease, transform .75s ease;
+        }
+        .reveal.in { opacity: 1; transform: none; }
+
+        /* ================================================
+           SERVICES
+        ================================================ */
+        .services-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px; align-items: end;
+            margin-bottom: 80px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 2px;
+        }
+
+        .svc-card {
+            background: var(--bg-card);
+            padding: 40px 34px;
+            border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+            transition: background var(--transition), border-color var(--transition), transform var(--transition);
+            cursor: default;
+        }
+        .svc-card::after {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 2px; background: var(--accent);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform var(--transition);
+        }
+        .svc-card:hover { background: var(--bg-card-hover); border-color: var(--border-accent); transform: translateY(-4px); }
+        .svc-card:hover::after { transform: scaleX(1); }
+
+        .svc-icon {
+            width: 44px; height: 44px;
+            color: var(--accent);
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+        .svc-name {
+            font-family: var(--font-display);
+            font-size: 19px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-bottom: 12px;
+            transition: color var(--transition);
+        }
+        .svc-card:hover .svc-name { color: var(--accent); }
+        .svc-desc {
+            font-size: 13.5px; line-height: 1.65;
+            color: var(--text-secondary);
+        }
+
+        /* ================================================
+           CLIENTS / MARQUEE
+        ================================================ */
+        .clients-header {
+            text-align: center;
+            max-width: 700px; margin: 0 auto 80px;
+        }
+        .clients-header .eyebrow { justify-content: center; }
+
+        .marquee-wrap {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .marquee-wrap::before,
+        .marquee-wrap::after {
+            content: '';
+            position: absolute; top: 0; bottom: 0;
+            width: 200px; z-index: 2; pointer-events: none;
+        }
+        .marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--bg-primary), transparent); }
+        .marquee-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg-primary), transparent); }
+
+        .marquee-track {
+            display: flex; width: max-content;
+            animation: marquee 32s linear infinite;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        .logo-item {
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 56px; height: 90px;
+        }
+        .logo-item span {
+            font-family: var(--font-display);
+            font-size: 21px; font-weight: 800;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+            transition: color var(--transition);
+        }
+        .logo-item:hover span { color: rgba(255,255,255,0.7); }
+
+        .clients-note {
+            text-align: center;
+            font-size: 13px; letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-top: 52px;
+        }
+
+        /* ================================================
+           ABOUT / HISTORIA
+        ================================================ */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px; align-items: start;
+        }
+
+        .about-text p {
+            font-size: 15.5px; line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .about-text p:first-of-type {
+            font-size: 19px; font-weight: 300;
+            color: var(--text-primary);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 44px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute; left: 0; top: 8px; bottom: 8px;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent) 0%, rgba(255,107,43,0.08) 100%);
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 52px;
+        }
+        .tl-item:last-child { margin-bottom: 0; }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -48px; top: 6px;
+            width: 9px; height: 9px;
+            background: var(--accent); border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(255,107,43,0.12);
+        }
+
+        .tl-year {
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.24em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 8px;
+        }
+        .tl-head {
+            font-family: var(--font-display);
+            font-size: 21px; font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .tl-body {
+            font-size: 14px; line-height: 1.65;
+            color: var(--text-secondary);
+        }
+
+        /* ================================================
+           TESTIMONIAL
+        ================================================ */
+        .testimonial {
+            background: var(--accent);
+            padding: 112px 56px;
+            text-align: center;
+        }
+        .testimonial-quote {
+            font-family: var(--font-display);
+            font-size: clamp(26px, 3.5vw, 50px);
+            font-weight: 800; line-height: 1.12;
+            text-transform: uppercase;
+            color: #fff;
+            max-width: 920px; margin: 0 auto 44px;
+            position: relative;
+        }
+        .testimonial-quote::before {
+            content: '\201C';
+            display: block;
+            font-size: 130px; line-height: 0.7;
+            margin-bottom: 24px;
+            opacity: 0.28;
+            font-family: Georgia, serif;
+        }
+        .testimonial-author {
+            font-size: 13px; font-weight: 600;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: rgba(255,255,255,0.68);
+        }
+
+        /* ================================================
+           COVERAGE
+        ================================================ */
+        .coverage-inner {
+            max-width: 760px; margin: 0 auto;
+            text-align: center;
+        }
+        .coverage-inner .eyebrow { justify-content: center; }
+
+        .coverage-map {
+            width: 200px; height: 280px;
+            margin: 64px auto;
+        }
+        .coverage-map svg { width: 100%; height: 100%; overflow: visible; }
+
+        .coverage-title {
+            font-family: var(--font-display);
+            font-size: clamp(38px, 5vw, 70px);
+            font-weight: 900; text-transform: uppercase;
+            line-height: 0.95; margin-bottom: 28px;
+        }
+        .coverage-title .line-accent { color: var(--accent); }
+
+        .coverage-body {
+            font-size: 16px; line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* ================================================
+           CONTACT
+        ================================================ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px; align-items: start;
+        }
+
+        .contact-side h3 {
+            font-family: var(--font-display);
+            font-size: 22px; font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+        .contact-side > p {
+            font-size: 15.5px; line-height: 1.75;
+            color: var(--text-secondary); margin-bottom: 36px;
+        }
+        .contact-email-link {
+            display: inline-flex; align-items: center; gap: 12px;
+            color: var(--accent);
+            font-size: 17px; font-weight: 500;
+            text-decoration: none; margin-bottom: 52px;
+            transition: opacity var(--transition);
+        }
+        .contact-email-link:hover { opacity: 0.75; }
+
+        .contact-promise {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            padding: 22px 26px;
+        }
+        .contact-promise p {
+            font-size: 15px; line-height: 1.6;
+            color: var(--text-secondary);
+            font-style: italic; margin: 0;
+        }
+
+        /* Form */
+        .contact-form {
+            display: flex; flex-direction: column; gap: 18px;
+        }
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+        }
+        .form-field {
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .form-field label {
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 14px 18px;
+            font-family: var(--font-body); font-size: 15px;
+            outline: none; border-radius: 0;
+            -webkit-appearance: none; appearance: none;
+            transition: border-color var(--transition);
+        }
+        .form-field input::placeholder,
+        .form-field textarea::placeholder { color: var(--text-muted); }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus { border-color: var(--accent); }
+        .form-field textarea { resize: vertical; min-height: 128px; }
+        .form-field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+        .form-field select option { background: #1c1c1c; }
+
+        .btn-submit {
+            background: var(--accent); color: #fff;
+            padding: 18px 48px;
+            font-family: var(--font-display);
+            font-size: 17px; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            border: none; cursor: pointer; align-self: flex-start;
+            transition: background var(--transition), transform var(--transition);
+        }
+        .btn-submit:hover { background: var(--accent-light); transform: translateY(-2px); }
+        .btn-submit.sent { background: #2a9d4e; cursor: default; }
+
+        /* ================================================
+           FOOTER
+        ================================================ */
+        footer {
+            background: #070707;
+            padding: 72px 56px 44px;
+            border-top: 1px solid var(--border);
+        }
+        .footer-inner {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px; margin-bottom: 64px;
+        }
+
+        .footer-brand .nav-logo { display: block; margin-bottom: 18px; font-size: 18px; }
+        .footer-tagline {
+            font-size: 14px; line-height: 1.75;
+            color: var(--text-muted); max-width: 260px;
+        }
+
+        .footer-col h4 {
+            font-family: var(--font-display);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: var(--text-primary); margin-bottom: 22px;
+        }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+        .footer-col a {
+            font-size: 14px; color: var(--text-muted);
+            text-decoration: none; transition: color var(--transition);
+        }
+        .footer-col a:hover { color: var(--accent); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 36px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .footer-copy, .footer-legal {
+            font-size: 13px; color: var(--text-muted);
+        }
+
+        /* ================================================
+           RESPONSIVE
+        ================================================ */
+        @media (max-width: 1100px) {
+            .services-header { grid-template-columns: 1fr; }
+            .about-grid      { grid-template-columns: 1fr; gap: 60px; }
+            .contact-grid    { grid-template-columns: 1fr; gap: 60px; }
+            .footer-inner    { grid-template-columns: 1fr 1fr; gap: 44px; }
+            .cred-grid       { grid-template-columns: repeat(2,1fr); }
+            .cred-item:nth-child(2) { border-right: none; }
+            .cred-item:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.18); }
+            .cred-item:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.18); border-right: none; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 18px 24px; }
+            .navbar.scrolled { padding: 13px 24px; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .hero  { padding: 110px 24px 90px; }
+            .section { padding: 88px 24px; }
+            .testimonial { padding: 80px 24px; }
+            .cred-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+            .footer { padding: 56px 24px 36px; }
+            .geo-sq1, .geo-sq2 { display: none; }
+            body { cursor: auto; }
+            .cursor, .cursor-ring { display: none; }
+            .scroll-ind { left: 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-h1 { font-size: 48px; }
+            .cred-num { font-size: 44px; }
+            .cred-item { padding: 36px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================
+     CUSTOM CURSOR
+============================================================ -->
+<div class="cursor"      id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ============================================================
+     MOBILE NAV
+============================================================ -->
+<nav class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menú móvil">
+    <div class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Cerrar menú">
+        <span></span><span></span>
+    </div>
+    <a href="#servicios" onclick="closeMobileNav()">Servicios</a>
+    <a href="#clientes"  onclick="closeMobileNav()">Clientes</a>
+    <a href="#nosotros"  onclick="closeMobileNav()">Nosotros</a>
+    <a href="#contacto"  onclick="closeMobileNav()">Contacto</a>
+</nav>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<header class="navbar" id="navbar" role="banner">
+    <a href="#" class="nav-logo" aria-label="Hugo López y Hnos. S.A.">
+        Hugo López <span class="accent">&amp;</span> Hnos. S.A.
+    </a>
+    <ul class="nav-links" role="list">
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#clientes">Clientes</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#contacto" class="nav-cta">Solicitar Presupuesto</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Abrir menú" role="button" tabindex="0">
+        <span></span><span></span><span></span>
+    </div>
+</header>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero" id="inicio" aria-label="Inicio">
+    <div class="hero-bg" id="heroBg"></div>
+
+    <!-- Animated geometry -->
+    <div class="hero-geo" aria-hidden="true">
+        <div class="geo geo-sq1"></div>
+        <div class="geo geo-sq2"></div>
+        <div class="geo geo-sq3"></div>
+        <div class="geo-line geo-l1"></div>
+        <div class="geo-line geo-l2"></div>
+        <div class="geo-line geo-l3"></div>
+        <div class="geo-dot geo-d1"></div>
+        <div class="geo-dot geo-d2"></div>
+        <div class="geo-dot geo-d3"></div>
+    </div>
+
+    <div class="hero-content">
+        <p class="hero-eyebrow">Mantenimiento Industrial desde 1961</p>
+
+        <h1 class="hero-h1">
+            Más de 60 años
+            <span class="line-accent">construyendo</span>
+            la Argentina industrial
+        </h1>
+
+        <p class="hero-sub">
+            Especialistas en instalaciones industriales, impermeabilización y pisos.
+            Operamos en todo el territorio argentino para las empresas más exigentes del mundo.
+        </p>
+
+        <div class="hero-ctas">
+            <a href="#servicios" class="btn btn-solid">
+                Ver Servicios
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="#contacto" class="btn btn-outline">Contactanos</a>
+        </div>
+    </div>
+
+    <div class="scroll-ind" aria-hidden="true">
+        <div class="scroll-ind-line"></div>
+        <span>Scroll</span>
+    </div>
+</section>
+
+<!-- ============================================================
+     CREDENTIALS BAR
+============================================================ -->
+<div class="credentials" role="region" aria-label="Números clave">
+    <div class="cred-grid" id="credGrid">
+        <div class="cred-item">
+            <span class="cred-num" data-target="63" data-suffix="+">63+</span>
+            <span class="cred-label">Años de trayectoria</span>
+        </div>
+        <div class="cred-item">
+            <span class="cred-num" data-target="23" data-prefix="En " data-suffix=" prov.">En 23 prov.</span>
+            <span class="cred-label">Presencia nacional</span>
+        </div>
+        <div class="cred-item">
+            <span class="cred-num" data-target="10" data-suffix="+">10+</span>
+            <span class="cred-label">Clientes Fortune 500</span>
+        </div>
+        <div class="cred-item">
+            <span class="cred-num" data-target="2" data-suffix="ª Gen.">2ª Gen.</span>
+            <span class="cred-label">Empresa familiar</span>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     SERVICES
+============================================================ -->
+<section class="section section--mid" id="servicios" aria-labelledby="svc-title">
+    <div class="services-header">
+        <div>
+            <p class="eyebrow reveal">Lo que hacemos</p>
+            <h2 class="section-title reveal" id="svc-title">Soluciones<br>de largo plazo</h2>
+        </div>
+        <p class="section-sub reveal">
+            Cada trabajo está respaldado por décadas de experiencia y un compromiso inquebrantable con la calidad.
+            No venimos a hacer una obra más: venimos a resolver un problema de forma definitiva.
+        </p>
+    </div>
+
+    <div class="services-grid">
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M4 40h40M8 40v-8h32v8M12 32v-6h6v6M30 32v-6h6v6M19 32v-10h10v10"/>
+                <path d="M4 28h40" stroke-dasharray="3 3"/>
+            </svg>
+            <h3 class="svc-name">Bacheo y Sellado de Juntas</h3>
+            <p class="svc-desc">Reparación y sellado profesional de fisuras y juntas en pisos industriales. Máxima durabilidad y resistencia al tránsito pesado.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="6" y="34" width="36" height="8" rx="1"/>
+                <path d="M10 34V22M18 34V18M26 34V22M34 34V18"/>
+                <path d="M6 18h36"/>
+            </svg>
+            <h3 class="svc-name">Lapidado / Pulido de Hormigón</h3>
+            <p class="svc-desc">Tratamiento superficial para pisos de hormigón. Resultado final brillante, resistente y de bajo mantenimiento.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M4 36h40M8 36V20l16-14 16 14v16"/>
+                <path d="M4 36l4-10h32l4 10"/>
+                <rect x="18" y="26" width="12" height="10"/>
+            </svg>
+            <h3 class="svc-name">Impermeabilización de Techos</h3>
+            <p class="svc-desc">Sistema Parking y membranas de alto rendimiento. Protección total contra filtraciones con garantía extendida.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="6" y="6" width="36" height="36" rx="2"/>
+                <path d="M6 22h36M6 34h36M22 6v36M34 6v36"/>
+            </svg>
+            <h3 class="svc-name">Revestimientos Epoxi y Poliuretánicos</h3>
+            <p class="svc-desc">Recubrimientos de alta resistencia química y mecánica. Ideales para producción, almacenamiento y laboratorios.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M10 40V28M18 40V20M26 40V24M34 40V16M42 40V20"/>
+                <path d="M6 40h36"/>
+                <path d="M6 14C10 8 18 8 22 14s20 2 20-4"/>
+            </svg>
+            <h3 class="svc-name">Pintura por Sistema Airless</h3>
+            <p class="svc-desc">Aplicación de alta presión para acabados uniformes y durables. Mayor rendimiento y menor tiempo de ejecución.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="8" y="8" width="32" height="32" rx="4"/>
+                <path d="M8 20h32M8 32h32M20 8v32M32 8v32"/>
+            </svg>
+            <h3 class="svc-name">Pinturas Industriales</h3>
+            <p class="svc-desc">Sistemas específicos para ambientes industriales agresivos. Resistencia química, térmica y mecánica certificada.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M6 42h36M10 42V26l14-18 14 18v16"/>
+                <circle cx="24" cy="34" r="5"/>
+                <path d="M6 26h36"/>
+            </svg>
+            <h3 class="svc-name">Pisos Conductivos / Antiestáticos</h3>
+            <p class="svc-desc">Soluciones ESD certificadas para áreas sensibles a descargas electrostáticas. Cumplimiento normativo garantizado.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="6" y="28" width="36" height="14" rx="2"/>
+                <path d="M12 28V18M24 28V14M36 28V18"/>
+                <rect x="8" y="12" width="8" height="6"/>
+                <rect x="20" y="8" width="8" height="6"/>
+                <rect x="32" y="12" width="8" height="6"/>
+            </svg>
+            <h3 class="svc-name">Bases de Hormigón para Maquinaria</h3>
+            <p class="svc-desc">Construcción de bases precisas. Nivelación, anclajes y tolerancias según especificaciones del fabricante.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M8 40h32M12 40V28h4v12M20 40V20h4v20M28 40V24h4v16"/>
+                <path d="M36 28c0-7-5.373-13-12-13s-12 6-12 13"/>
+            </svg>
+            <h3 class="svc-name">Tratamientos Anticorrosivos</h3>
+            <p class="svc-desc">Protección integral de estructuras metálicas. Sandblasting, imprimación y sistemas de alta performance.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M4 40h40M8 40V12M40 40V12M8 12h32"/>
+                <path d="M4 16h40"/>
+                <path d="M16 40V28h6v12M26 40V28h6v12"/>
+            </svg>
+            <h3 class="svc-name">Demarcación de Calles y Estacionamientos</h3>
+            <p class="svc-desc">Señalización horizontal precisa para plantas y estacionamientos. Pintura de tránsito duradera y visible.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <ellipse cx="24" cy="12" rx="16" ry="6"/>
+                <path d="M8 12v12c0 3.314 7.163 6 16 6s16-2.686 16-6V12"/>
+                <path d="M8 24v10c0 3.314 7.163 6 16 6s16-2.686 16-6V24"/>
+            </svg>
+            <h3 class="svc-name">Morteros y Autonivelantes</h3>
+            <p class="svc-desc">Morteros técnicos y sistemas autonivelantes para corrección de superficies irregulares o deterioradas.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M4 42h40V14H4zM4 14h40V8H4z"/>
+                <path d="M4 36h40M16 42V14M32 42V14"/>
+            </svg>
+            <h3 class="svc-name">Zócalos Sanitarios</h3>
+            <p class="svc-desc">Zócalos curvos entre piso y pared. Indispensables en áreas de alimentos y zonas con requisitos de higiene.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M16 8h16v8H16zM12 16h24v8H12zM8 24h32v18H8z"/>
+                <path d="M24 34v8M18 40h12"/>
+                <circle cx="24" cy="30" r="3"/>
+            </svg>
+            <h3 class="svc-name">Lavado a Vapor</h3>
+            <p class="svc-desc">Limpieza industrial profunda con vapor de alta temperatura. Eliminación de grasa y contaminantes sin químicos agresivos.</p>
+        </article>
+
+        <article class="svc-card reveal">
+            <svg class="svc-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="6" y="6" width="36" height="36" rx="3"/>
+                <path d="M6 20h36M20 6v36"/>
+                <path d="M28 16l10 10M28 26l10-10"/>
+            </svg>
+            <h3 class="svc-name">Refacción de Obra Civil</h3>
+            <p class="svc-desc">Reparación integral en plantas industriales. Desde pequeñas reparaciones hasta reformas estructurales complejas.</p>
+        </article>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     CLIENTS
+============================================================ -->
+<section class="section section--dark" id="clientes" aria-labelledby="cli-title">
+    <div class="clients-header">
+        <p class="eyebrow reveal">Nuestros clientes</p>
+        <h2 class="section-title reveal" id="cli-title">
+            Confían en nosotros<br>las empresas más<br>exigentes del mundo
+        </h2>
+    </div>
+
+    <div class="marquee-wrap reveal" aria-label="Clientes" role="marquee">
+        <div class="marquee-track">
+            <!-- First set -->
+            <div class="logo-item"><span>Coca&#8209;Cola</span></div>
+            <div class="logo-item"><span>Ford</span></div>
+            <div class="logo-item"><span>Volkswagen</span></div>
+            <div class="logo-item"><span>Stellantis</span></div>
+            <div class="logo-item"><span>Ferrero</span></div>
+            <div class="logo-item"><span>Nestlé</span></div>
+            <div class="logo-item"><span>Toyota</span></div>
+            <div class="logo-item"><span>Mercedes&#8209;Benz</span></div>
+            <div class="logo-item"><span>Pirelli</span></div>
+            <div class="logo-item"><span>Grupo Hispano</span></div>
+            <!-- Duplicate for seamless loop -->
+            <div class="logo-item" aria-hidden="true"><span>Coca&#8209;Cola</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Ford</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Volkswagen</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Stellantis</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Ferrero</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Nestlé</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Toyota</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Mercedes&#8209;Benz</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Pirelli</span></div>
+            <div class="logo-item" aria-hidden="true"><span>Grupo Hispano</span></div>
+        </div>
+    </div>
+
+    <p class="clients-note reveal">
+        Operamos en plantas industriales de todo el territorio argentino
+    </p>
+</section>
+
+<!-- ============================================================
+     ABOUT / HISTORIA
+============================================================ -->
+<section class="section section--mid" id="nosotros" aria-labelledby="about-title">
+    <div class="about-grid">
+        <div class="about-text">
+            <p class="eyebrow reveal">Quiénes somos</p>
+            <h2 class="section-title reveal" id="about-title">Una empresa<br>de palabra</h2>
+
+            <p class="reveal">
+                Hugo López y Hnos. S.A. nació en 1961 como una empresa familiar con una convicción simple:
+                hacer bien las cosas. Hoy, más de seis décadas después y ya en su segunda generación,
+                esa convicción sigue siendo el núcleo de todo lo que hacemos.
+            </p>
+            <p class="reveal">
+                Trabajamos con empresas que no pueden darse el lujo de errores. Que tienen exigencias técnicas
+                complejas, cronogramas ajustados y estándares de calidad que no negocian.
+                Con ellas construimos relaciones de largo plazo basadas en una sola cosa: confianza.
+            </p>
+            <p class="reveal">
+                No somos el proveedor más barato. Somos el que resuelve el problema de forma definitiva.
+            </p>
+        </div>
+
+        <div class="timeline" aria-label="Historia de la empresa">
+            <div class="tl-item reveal">
+                <p class="tl-year">1961</p>
+                <h3 class="tl-head">Fundación</h3>
+                <p class="tl-body">Hugo López funda la empresa en Buenos Aires con un equipo reducido y una misión clara: mantenimiento industrial de excelencia.</p>
+            </div>
+            <div class="tl-item reveal">
+                <p class="tl-year">1970s</p>
+                <h3 class="tl-head">Expansión Nacional</h3>
+                <p class="tl-body">La empresa comienza a operar en provincias del interior, ampliando su cartera con grandes clientes del sector industrial.</p>
+            </div>
+            <div class="tl-item reveal">
+                <p class="tl-year">1985</p>
+                <h3 class="tl-head">Clientes Multinacionales</h3>
+                <p class="tl-body">Inicio de la relación con empresas de capitales internacionales. Los estándares se elevan y la calidad acompaña.</p>
+            </div>
+            <div class="tl-item reveal">
+                <p class="tl-year">2000s</p>
+                <h3 class="tl-head">Segunda Generación</h3>
+                <p class="tl-body">Los hijos toman la conducción incorporando nuevas tecnologías, procesos certificados y sistemas de gestión modernos.</p>
+            </div>
+            <div class="tl-item reveal">
+                <p class="tl-year">Hoy</p>
+                <h3 class="tl-head">Líderes del Sector</h3>
+                <p class="tl-body">Más de 60 años de historia, presencia en todo el país y los clientes más exigentes del mundo. El trabajo habla por sí solo.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIAL
+============================================================ -->
+<div class="testimonial" role="region" aria-label="Testimonio">
+    <blockquote class="testimonial-quote reveal">
+        Llevamos más de quince años trabajando con Hugo López y Hnos.
+        No cambiamos porque no tenemos razón para hacerlo.
+        Llegan, entienden el problema, proponen una solución y la ejecutan.
+        Sin vueltas.
+    </blockquote>
+    <p class="testimonial-author reveal">— Carlos G., Responsable de Mantenimiento Industrial</p>
+</div>
+
+<!-- ============================================================
+     COVERAGE
+============================================================ -->
+<section class="section section--dark" aria-labelledby="cov-title">
+    <div class="coverage-inner">
+        <p class="eyebrow reveal">Alcance operativo</p>
+
+        <!-- Stylized Argentina SVG -->
+        <div class="coverage-map reveal" aria-hidden="true">
+            <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Argentina silhouette (simplified) -->
+                <path d="M88 10 C88 10 102 8 112 12 C122 16 128 28 132 42 C136 56 140 70 143 86 C146 102 148 118 146 132 C144 146 138 160 130 173 C122 186 112 198 104 210 C96 222 94 228 100 216 C106 204 108 196 100 216 Z" fill="none" stroke="none"/>
+
+                <!-- Cleaner Argentina outline -->
+                <polyline points="88,12 94,9 102,9 110,12 118,18 124,28 128,40 132,54 136,68 140,84 142,100 142,116 140,130 136,144 130,158 122,172 114,184 106,196 100,206 94,196 86,184 78,172 70,160 64,148 60,136 57,122 55,108 56,94 58,80 62,66 68,52 74,38 80,26 84,18 88,12"
+                      fill="none" stroke="rgba(255,107,43,0.55)" stroke-width="1.5" stroke-linejoin="round"/>
+                <!-- Patagonia narrowing -->
+                <polyline points="100,206 104,218 106,230 106,242 104,254 100,264 98,270 96,264 94,252 94,240 96,228 98,216 100,206"
+                          fill="none" stroke="rgba(255,107,43,0.55)" stroke-width="1.5" stroke-linejoin="round"/>
+
+                <!-- Pulse points -->
+                <g>
+                    <circle cx="100" cy="120" r="3.5" fill="var(--accent)"/>
+                    <circle cx="100" cy="120" r="3.5" fill="var(--accent)" opacity="0.6">
+                        <animate attributeName="r" from="3.5" to="14" dur="2.2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="0.6" to="0" dur="2.2s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <circle cx="76" cy="80" r="2.5" fill="var(--accent)" opacity="0.7"/>
+                    <circle cx="76" cy="80" r="2.5" fill="var(--accent)" opacity="0.5">
+                        <animate attributeName="r" from="2.5" to="10" dur="2.8s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="0.5" to="0" dur="2.8s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <circle cx="128" cy="160" r="2.5" fill="var(--accent)" opacity="0.7"/>
+                    <circle cx="128" cy="160" r="2.5" fill="var(--accent)" opacity="0.5">
+                        <animate attributeName="r" from="2.5" to="10" dur="3.4s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="0.5" to="0" dur="3.4s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <circle cx="62" cy="50" r="2" fill="var(--accent)" opacity="0.5"/>
+                    <circle cx="62" cy="50" r="2" fill="var(--accent)" opacity="0.4">
+                        <animate attributeName="r" from="2" to="8" dur="3s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="0.4" to="0" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <circle cx="100" cy="240" r="2" fill="var(--accent)" opacity="0.5"/>
+                    <circle cx="100" cy="240" r="2" fill="var(--accent)" opacity="0.4">
+                        <animate attributeName="r" from="2" to="8" dur="3.6s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" from="0.4" to="0" dur="3.6s" repeatCount="indefinite"/>
+                    </circle>
+                </g>
+            </svg>
+        </div>
+
+        <h2 class="coverage-title reveal" id="cov-title">
+            Trabajamos en<br><span class="line-accent">todo el país</span>
+        </h2>
+        <p class="coverage-body reveal">
+            Desde plantas en el Gran Buenos Aires hasta instalaciones en Patagonia, Cuyo y el NOA.
+            Nuestro equipo se desplaza donde el trabajo nos lleva —
+            la distancia nunca es un obstáculo para la calidad.
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section class="section section--mid" id="contacto" aria-labelledby="contact-title">
+    <div class="contact-grid">
+        <!-- Left col -->
+        <div class="contact-side">
+            <p class="eyebrow reveal">Hablemos</p>
+            <h2 class="section-title reveal" id="contact-title">Contanos<br>tu proyecto</h2>
+
+            <p class="reveal">
+                Te respondemos en menos de 24 horas. Sin compromisos, sin rodeos.
+                Solo una conversación honesta sobre cómo podemos ayudarte.
+            </p>
+
+            <a href="mailto:info@hugolopezyhnos.com" class="contact-email-link reveal">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M2 5l8 6 8-6M2 5h16v12H2V5z" stroke-linejoin="round"/>
+                </svg>
+                info@hugolopezyhnos.com
+            </a>
+
+            <div class="contact-promise reveal">
+                <p>"Contanos tu proyecto. Te respondemos en menos de 24 horas."</p>
+            </div>
+        </div>
+
+        <!-- Right col: form -->
+        <form class="contact-form reveal" id="contactForm" novalidate>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="f-nombre">Nombre *</label>
+                    <input type="text" id="f-nombre" name="nombre" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="form-field">
+                    <label for="f-empresa">Empresa *</label>
+                    <input type="text" id="f-empresa" name="empresa" placeholder="Nombre de la empresa" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="f-tel">Teléfono</label>
+                    <input type="tel" id="f-tel" name="telefono" placeholder="+54 11 0000-0000">
+                </div>
+                <div class="form-field">
+                    <label for="f-email">Email *</label>
+                    <input type="email" id="f-email" name="email" placeholder="tu@empresa.com" required>
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="f-servicio">Tipo de servicio</label>
+                <select id="f-servicio" name="servicio">
+                    <option value="">Seleccioná un servicio...</option>
+                    <option>Bacheo y Sellado de Juntas</option>
+                    <option>Lapidado / Pulido de Hormigón</option>
+                    <option>Impermeabilización de Techos</option>
+                    <option>Revestimientos Epoxi y Poliuretánicos</option>
+                    <option>Pintura por Sistema Airless</option>
+                    <option>Pinturas Industriales</option>
+                    <option>Pisos Conductivos / Antiestáticos</option>
+                    <option>Bases de Hormigón para Maquinaria</option>
+                    <option>Tratamientos Anticorrosivos</option>
+                    <option>Demarcación de Calles y Estacionamientos</option>
+                    <option>Morteros y Autonivelantes</option>
+                    <option>Zócalos Sanitarios</option>
+                    <option>Lavado a Vapor</option>
+                    <option>Refacción de Obra Civil</option>
+                    <option>Otro / Consulta general</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="f-msg">Mensaje *</label>
+                <textarea id="f-msg" name="mensaje" placeholder="Describí brevemente el trabajo o la consulta. Cuanto más detalle, mejor podemos ayudarte." required></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">Enviar consulta</button>
+        </form>
+    </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <a href="#inicio" class="nav-logo">
+                Hugo López <span class="accent">&amp;</span> Hnos. S.A.
+            </a>
+            <p class="footer-tagline">
+                Empresa familiar argentina de mantenimiento industrial.
+                Desde 1961, construyendo confianza obra por obra.
+            </p>
+        </div>
+
+        <nav class="footer-col" aria-label="Navegación footer">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#clientes">Clientes</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+
+        <div class="footer-col">
+            <h4>Contacto</h4>
+            <ul>
+                <li><a href="mailto:info@hugolopezyhnos.com">info@hugolopezyhnos.com</a></li>
+                <li><a href="#contacto">Solicitar presupuesto</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p class="footer-copy">© 2024 Hugo López y Hnos. S.A. — Todos los derechos reservados.</p>
+        <p class="footer-legal">Mantenimiento industrial · Impermeabilización · Pisos · Argentina</p>
+    </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+'use strict';
+
+/* ----------------------------------------------------------
+   CUSTOM CURSOR
+---------------------------------------------------------- */
+(function() {
+    const cur  = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    if (!cur || window.matchMedia('(pointer: coarse)').matches) return;
+
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cur.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+    });
+
+    (function loop() {
+        rx += (mx - rx - 19) * 0.13;
+        ry += (my - ry - 19) * 0.13;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(loop);
+    })();
+
+    const hoverEls = document.querySelectorAll('a, button, .svc-card, input, select, textarea, [role="button"]');
+    hoverEls.forEach(el => {
+        el.addEventListener('mouseenter', () => { cur.classList.add('expanded'); ring.classList.add('expanded'); });
+        el.addEventListener('mouseleave', () => { cur.classList.remove('expanded'); ring.classList.remove('expanded'); });
+    });
+})();
+
+/* ----------------------------------------------------------
+   NAVBAR SCROLL STATE
+---------------------------------------------------------- */
+(function() {
+    const nav = document.getElementById('navbar');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+})();
+
+/* ----------------------------------------------------------
+   PARALLAX HERO BACKGROUND
+---------------------------------------------------------- */
+(function() {
+    const bg = document.getElementById('heroBg');
+    if (!bg) return;
+    const onScroll = () => {
+        const y = window.scrollY;
+        if (y < window.innerHeight * 1.5) {
+            bg.style.transform = `translateY(${y * 0.28}px)`;
+        }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+/* ----------------------------------------------------------
+   MOBILE NAV
+---------------------------------------------------------- */
+function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+}
+
+/* ----------------------------------------------------------
+   SCROLL REVEAL  (staggered siblings)
+---------------------------------------------------------- */
+(function() {
+    const els = document.querySelectorAll('.reveal');
+    const io  = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el       = entry.target;
+            const parent   = el.parentElement;
+            const siblings = [...parent.querySelectorAll('.reveal:not(.in)')];
+            const idx      = siblings.indexOf(el);
+            setTimeout(() => el.classList.add('in'), Math.max(0, idx) * 55);
+            io.unobserve(el);
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    els.forEach(el => io.observe(el));
+})();
+
+/* ----------------------------------------------------------
+   ANIMATED COUNTERS
+---------------------------------------------------------- */
+(function() {
+    const grid = document.getElementById('credGrid');
+    if (!grid) return;
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function animateCounter(el) {
+        const target = parseInt(el.dataset.target, 10);
+        const suffix = el.dataset.suffix || '';
+        const prefix = el.dataset.prefix || '';
+        const dur    = 1800;
+        const start  = performance.now();
+
+        function tick(now) {
+            const p = Math.min((now - start) / dur, 1);
+            el.textContent = prefix + Math.floor(easeOutCubic(p) * target) + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            const counters = e.target.querySelectorAll('[data-target]');
+            counters.forEach((c, i) => setTimeout(() => animateCounter(c), i * 160));
+            io.unobserve(e.target);
+        });
+    }, { threshold: 0.5 });
+
+    io.observe(grid);
+})();
+
+/* ----------------------------------------------------------
+   CONTACT FORM
+---------------------------------------------------------- */
+(function() {
+    const form = document.getElementById('contactForm');
+    const btn  = document.getElementById('submitBtn');
+    if (!form) return;
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        btn.textContent = '✓ Consulta enviada — te contactamos pronto';
+        btn.classList.add('sent');
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.textContent = 'Enviar consulta';
+            btn.classList.remove('sent');
+            btn.disabled = false;
+            form.reset();
+        }, 4000);
+    });
+})();
+
+/* ----------------------------------------------------------
+   SMOOTH SCROLL FOR ANCHOR LINKS
+---------------------------------------------------------- */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        const id  = a.getAttribute('href');
+        if (id === '#') return;
+        const tgt = document.querySelector(id);
+        if (tgt) { e.preventDefault(); tgt.scrollIntoView({ behavior: 'smooth' }); }
+    });
+});
+</script>
+
+</body>
+</html>
