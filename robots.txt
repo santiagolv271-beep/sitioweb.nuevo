@@ -1,0 +1,16 @@
+# robots.txt — Hugo López y Hnos. S.A.
+# Instrucciones para los motores de búsqueda (Google, Bing, etc.)
+
+# Permitir a todos los buscadores indexar el sitio
+User-agent: *
+Allow: /
+
+# No indexar la carpeta de imágenes directamente (las imágenes se ven en el contexto del sitio)
+Disallow: /imagenes/
+
+# No indexar archivos de configuración
+Disallow: /.gitignore
+Disallow: /SECURITY.md
+
+# Sitemap (cuando el sitio esté publicado, reemplazar la URL con la real)
+# Sitemap: https://www.hugolopezyhnos.com/sitemap.xml

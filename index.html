@@ -6,10 +6,21 @@
     <meta name="description" content="Hugo López y Hnos. S.A. — Especialistas en mantenimiento industrial, impermeabilización y pisos desde 1961. Presencia en todo el territorio argentino.">
     <title>Hugo López y Hnos. S.A. | Mantenimiento Industrial desde 1961</title>
 
+    <!-- Seguridad -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Rendimiento -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="imagenes/hero.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- INICIO DEL BLOQUE CSS INLINE (se mantiene como respaldo) -->
     <style>
     /* =========================================================
        DESIGN TOKENS
@@ -719,11 +730,11 @@
      MOBILE NAV
 ================================================== -->
 <nav class="mobile-nav" id="mobileNav" role="navigation">
-    <div class="mob-close" onclick="closeMobileNav()" aria-label="Cerrar"></div>
-    <a href="#servicios" onclick="closeMobileNav()">Servicios</a>
-    <a href="#clientes"  onclick="closeMobileNav()">Clientes</a>
-    <a href="#nosotros"  onclick="closeMobileNav()">Nosotros</a>
-    <a href="#contacto"  onclick="closeMobileNav()">Contacto</a>
+    <div class="mob-close" aria-label="Cerrar"></div>
+    <a href="#servicios">Servicios</a>
+    <a href="#clientes">Clientes</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#contacto">Contacto</a>
 </nav>
 
 <!-- ==================================================
@@ -738,7 +749,7 @@
         <li><a href="#contacto">Contacto</a></li>
         <li><a href="#contacto" class="btn-nav">Solicitar Presupuesto</a></li>
     </ul>
-    <div class="hamburger" id="hamburger" onclick="toggleMobileNav()" role="button" aria-label="Menú">
+    <div class="hamburger" id="hamburger" role="button" aria-label="Menú">
         <span></span><span></span><span></span>
     </div>
 </header>
@@ -968,7 +979,7 @@
 
         <!-- Foto 2: operario aplicando piso con uniforme de la empresa -->
         <div class="quality-photo">
-            <img src="imagenes/equipo-aplicacion-pisos.jpg"
+            <img src="imagenes/persona.jpg"
                  alt="Profesional de Hugo López y Hnos. S.A. aplicando revestimiento en piso de planta industrial"
                  loading="lazy">
             <div class="quality-photo-tag">Equipo propio en obra</div>
@@ -1048,35 +1059,8 @@
     </div>
 
     <div class="gallery">
-        <!-- FOTO DESTACADA (tall): piso en planta automotriz — el resultado más impresionante -->
-        <div class="g-item tall reveal">
-            <img src="imagenes/resultado-piso-automotriz.jpg"
-                 alt="Revestimiento de piso terminado en planta automotriz — acabado reflectante de alta calidad"
-                 loading="lazy">
-            <div class="g-overlay">
-                <span class="g-label">Revestimiento Epoxi — Planta Automotriz</span>
-            </div>
-        </div>
-
-        <!-- FOTO: piso blanco en planta industrial limpia -->
-        <div class="g-item reveal">
-            <img src="imagenes/resultado-piso-blanco.jpg"
-                 alt="Piso industrial terminado con acabado blanco en planta de alta limpieza"
-                 loading="lazy">
-            <div class="g-overlay">
-                <span class="g-label">Pisos Industriales — Acabado Premium</span>
-            </div>
-        </div>
-
-        <!-- FOTO: piso dos tonos con demarcación en depósito -->
-        <div class="g-item reveal">
-            <img src="imagenes/resultado-piso-deposito.jpg"
-                 alt="Revestimiento de piso y demarcación terminados en depósito industrial de gran escala"
-                 loading="lazy">
-            <div class="g-overlay">
-                <span class="g-label">Revestimientos y Demarcación — Depósito Industrial</span>
-            </div>
-        </div>
+        <!-- La galería se construye automáticamente desde js/main.js
+             Editá el array PORTFOLIO en ese archivo para cambiar las fotos -->
     </div>
 </section>
 
@@ -1348,108 +1332,8 @@
     </div>
 </footer>
 
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
-<script>
-'use strict';
-
-/* Navbar scroll state */
-(function () {
-    const nav = document.getElementById('nav');
-    function tick() { nav.classList.toggle('scrolled', window.scrollY > 56); }
-    window.addEventListener('scroll', tick, { passive: true });
-    tick();
-})();
-
-/* Hero parallax */
-(function () {
-    const bg = document.getElementById('heroBg');
-    if (!bg) return;
-    window.addEventListener('scroll', function () {
-        if (window.scrollY < window.innerHeight * 1.5)
-            bg.style.transform = 'translateY(' + (window.scrollY * 0.26) + 'px)';
-    }, { passive: true });
-})();
-
-/* Mobile nav */
-function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('open'); }
-function closeMobileNav()  { document.getElementById('mobileNav').classList.remove('open'); }
-
-/* Scroll reveal with stagger */
-(function () {
-    var els = document.querySelectorAll('.reveal');
-    var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-            if (!e.isIntersecting) return;
-            var siblings = Array.from(e.target.parentElement.querySelectorAll('.reveal:not(.in)'));
-            var idx = siblings.indexOf(e.target);
-            setTimeout(function () { e.target.classList.add('in'); }, Math.max(0, idx) * 58);
-            io.unobserve(e.target);
-        });
-    }, { threshold: 0.12, rootMargin: '0px 0px -44px 0px' });
-    els.forEach(function (el) { io.observe(el); });
-})();
-
-/* Animated counters */
-(function () {
-    var bar = document.getElementById('statsBar');
-    if (!bar) return;
-    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
-    function run(el) {
-        var target = parseInt(el.dataset.target, 10);
-        var suffix = el.dataset.suffix || '';
-        var dur = 1600;
-        var t0 = performance.now();
-        function tick(t) {
-            var p = Math.min((t - t0) / dur, 1);
-            el.textContent = Math.floor(easeOut(p) * target) + suffix;
-            if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-    }
-    var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-            if (!e.isIntersecting) return;
-            e.target.querySelectorAll('[data-target]').forEach(function (c, i) {
-                setTimeout(function () { run(c); }, i * 160);
-            });
-            io.unobserve(e.target);
-        });
-    }, { threshold: 0.5 });
-    io.observe(bar);
-})();
-
-/* Contact form */
-(function () {
-    var form = document.getElementById('contactForm');
-    var btn  = document.getElementById('submitBtn');
-    if (!form) return;
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (!form.checkValidity()) { form.reportValidity(); return; }
-        btn.textContent = 'Consulta enviada — te contactamos pronto';
-        btn.classList.add('sent');
-        btn.disabled = true;
-        setTimeout(function () {
-            btn.textContent = 'Enviar consulta';
-            btn.classList.remove('sent');
-            btn.disabled = false;
-            form.reset();
-        }, 4000);
-    });
-})();
-
-/* Smooth scroll */
-document.querySelectorAll('a[href^="#"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-        var id = a.getAttribute('href');
-        if (id === '#') return;
-        var t = document.querySelector(id);
-        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
-    });
-});
-</script>
+<!-- Script externo — galería, formulario, animaciones -->
+<script src="js/main.js" defer></script>
 
 </body>
 </html>
