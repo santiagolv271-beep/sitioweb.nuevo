@@ -10,28 +10,39 @@
    4. Para agregar más: copiá un bloque { ... } y pegalo al final de la lista
    ============================================================ */
 var PORTFOLIO = [
+    /* Las primeras 3 son las que se muestran en el sitio.
+       Reemplazá cada "archivo:" con el nombre exacto de tu foto. */
     {
-        archivo: 'resultado-piso-automotriz.jpg',
-        titulo:  'Revestimiento Epoxi',
-        detalle: 'Planta Automotriz'
+        archivo: 'persona.jpg',
+        titulo:  'Impermeabilización de Techos',
+        detalle: 'Aplicación in situ'
     },
     {
-        archivo: 'resultado-piso-blanco.jpg',
-        titulo:  'Piso Industrial',
-        detalle: 'Planta de Alta Limpieza'
+        archivo: 'piso-pulido.jpg',
+        titulo:  'Lapidado y Pulido de Hormigón',
+        detalle: 'Planta Industrial'
     },
     {
-        archivo: 'resultado-piso-deposito.jpg',
-        titulo:  'Revestimientos y Demarcación',
-        detalle: 'Depósito Logístico'
+        archivo: 'piso-pintado.jpg',
+        titulo:  'Pisos Epoxi y Demarcación',
+        detalle: 'Planta Industrial'
+    },
+    /* Estas quedan guardadas pero no se ven hasta que las subas primero en la lista */
+    {
+        archivo: 'techo-impermeabilizado.jpg',
+        titulo:  'Membrana Impermeabilizante',
+        detalle: 'Techo Industrial Terminado'
+    },
+    {
+        archivo: 'mortero-planta.jpg',
+        titulo:  'Mortero Industrial',
+        detalle: 'Planta de Procesos'
+    },
+    {
+        archivo: 'trabajo-pintura.jpg',
+        titulo:  'Pintura Industrial',
+        detalle: 'Trabajo en Altura'
     }
-    /* Para agregar más fotos copiá este bloque:
-    ,{
-        archivo: 'nombre-de-tu-foto.jpg',
-        titulo:  'Tipo de Trabajo',
-        detalle: 'Tipo de Planta / Cliente'
-    }
-    */
 ];
 
 /* ============================================================
