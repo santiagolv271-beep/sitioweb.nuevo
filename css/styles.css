@@ -185,7 +185,7 @@ a   { color: inherit; }
 
 /* ---------------------------------------------------------
    HERO
-   Foto: imagenes/hero.jpg
+   Foto: imagenes/FOTO 2.jpg
    (equipo en plataforma Haulotte — la imagen más dramática)
 --------------------------------------------------------- */
 .hero {
@@ -204,7 +204,7 @@ a   { color: inherit; }
             rgba(11, 28, 52, .72) 52%,
             rgba(11, 28, 52, .85) 100%
         ),
-        url('../imagenes/hero.jpg') center / cover no-repeat;
+        url('../imagenes/FOTO 2.jpg') center / cover no-repeat;
     will-change: transform;
 }
 

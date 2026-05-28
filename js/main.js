@@ -11,37 +11,42 @@
    ============================================================ */
 var PORTFOLIO = [
     /* Las primeras 3 son las que se muestran en el sitio.
-       Reemplazá cada "archivo:" con el nombre exacto de tu foto. */
+       Para cambiar el orden, mové los bloques arriba o abajo. */
     {
-        archivo: 'persona.jpg',
+        archivo: 'PSA Pta Pintura 017.jpg',
         titulo:  'Impermeabilización de Techos',
-        detalle: 'Aplicación in situ'
+        detalle: 'Planta PSA Peugeot-Citroën'
     },
     {
-        archivo: 'piso-pulido.jpg',
-        titulo:  'Lapidado y Pulido de Hormigón',
-        detalle: 'Planta Industrial'
+        archivo: 'vw 02.jpg',
+        titulo:  'Piso Epoxi Industrial',
+        detalle: 'Planta Volkswagen'
     },
     {
-        archivo: 'piso-pintado.jpg',
-        titulo:  'Pisos Epoxi y Demarcación',
-        detalle: 'Planta Industrial'
+        archivo: '8.jpg',
+        titulo:  'Revestimiento y Demarcación',
+        detalle: 'Planta de Producción'
     },
-    /* Estas quedan guardadas pero no se ven hasta que las subas primero en la lista */
+    /* Las siguientes están guardadas pero no se muestran */
     {
-        archivo: 'techo-impermeabilizado.jpg',
-        titulo:  'Membrana Impermeabilizante',
-        detalle: 'Techo Industrial Terminado'
-    },
-    {
-        archivo: 'mortero-planta.jpg',
-        titulo:  'Mortero Industrial',
-        detalle: 'Planta de Procesos'
+        archivo: 'trabajos psa 5.jpg',
+        titulo:  'Aplicación de Revestimiento Epoxi',
+        detalle: 'Centro de Distribución PSA'
     },
     {
-        archivo: 'trabajo-pintura.jpg',
-        titulo:  'Pintura Industrial',
-        detalle: 'Trabajo en Altura'
+        archivo: '10.jpg',
+        titulo:  'Pisos Epoxi con Demarcación',
+        detalle: 'Centro Logístico'
+    },
+    {
+        archivo: '3.jpg',
+        titulo:  'Restauración de Piso Industrial',
+        detalle: 'Antes y Después'
+    },
+    {
+        archivo: '10 (1).jpg',
+        titulo:  'Piso Epoxi con Señalización',
+        detalle: 'Taller de Servicio'
     }
 ];
 
